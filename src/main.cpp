@@ -118,7 +118,11 @@ public:
         float fontSize = 14.0f;
         std::string fontSizeStr = m_themeManager->getStyleProperty("font_size");
         if (!fontSizeStr.empty()) {
-            fontSize = std::stof(fontSizeStr);
+            try {
+                fontSize = std::stof(fontSizeStr);
+            } catch (const std::exception&) {
+                // Keep default on parse error
+            }
         }
 
         m_textRenderer = std::make_unique<TextRenderer>();

@@ -86,14 +86,19 @@ ThemeManager::Color ThemeManager::parseHexColor(const std::string& hexColor) con
     // Parse RGB or RGBA
     unsigned int r = 0, g = 0, b = 0, a = 255;
 
-    if (hex.length() >= 6) {
-        r = std::stoul(hex.substr(0, 2), nullptr, 16);
-        g = std::stoul(hex.substr(2, 2), nullptr, 16);
-        b = std::stoul(hex.substr(4, 2), nullptr, 16);
-    }
+    try {
+        if (hex.length() >= 6) {
+            r = std::stoul(hex.substr(0, 2), nullptr, 16);
+            g = std::stoul(hex.substr(2, 2), nullptr, 16);
+            b = std::stoul(hex.substr(4, 2), nullptr, 16);
+        }
 
-    if (hex.length() >= 8) {
-        a = std::stoul(hex.substr(6, 2), nullptr, 16);
+        if (hex.length() >= 8) {
+            a = std::stoul(hex.substr(6, 2), nullptr, 16);
+        }
+    } catch (const std::exception&) {
+        // Return default on parse error
+        return {0.0f, 0.0f, 0.0f, 1.0f};
     }
 
     return {

@@ -66,25 +66,33 @@ bool Config::load(const std::string& filename) {
     if (data.count("Display.theme")) {
         m_displaySettings.theme = data["Display.theme"];
     }
-    if (data.count("Display.opacity")) {
-        m_displaySettings.opacity = std::stod(data["Display.opacity"]);
-    }
-    if (data.count("Display.width")) {
-        m_displaySettings.width = std::stoi(data["Display.width"]);
-    }
-    if (data.count("Display.height")) {
-        m_displaySettings.height = std::stoi(data["Display.height"]);
+    try {
+        if (data.count("Display.opacity")) {
+            m_displaySettings.opacity = std::stod(data["Display.opacity"]);
+        }
+        if (data.count("Display.width")) {
+            m_displaySettings.width = std::stoi(data["Display.width"]);
+        }
+        if (data.count("Display.height")) {
+            m_displaySettings.height = std::stoi(data["Display.height"]);
+        }
+    } catch (const std::exception&) {
+        // Keep defaults on parse error
     }
 
     // Parse Graph settings
-    if (data.count("Graph.history_seconds")) {
-        m_graphSettings.historySeconds = std::stod(data["Graph.history_seconds"]);
+    try {
+        if (data.count("Graph.history_seconds")) {
+            m_graphSettings.historySeconds = std::stod(data["Graph.history_seconds"]);
+        }
+        if (data.count("Graph.line_width")) {
+            m_graphSettings.lineWidth = std::stod(data["Graph.line_width"]);
+        }
+    } catch (const std::exception&) {
+        // Keep defaults on parse error
     }
     if (data.count("Graph.show_grid")) {
         m_graphSettings.showGrid = (data["Graph.show_grid"] == "true");
-    }
-    if (data.count("Graph.line_width")) {
-        m_graphSettings.lineWidth = std::stod(data["Graph.line_width"]);
     }
     if (data.count("Graph.anti_aliasing")) {
         m_graphSettings.antiAliasing = (data["Graph.anti_aliasing"] == "true");
@@ -94,8 +102,15 @@ bool Config::load(const std::string& filename) {
     }
 
     // Parse Detection settings
-    if (data.count("Detection.drop_threshold_percent")) {
-        m_detectionSettings.dropThresholdPercent = std::stod(data["Detection.drop_threshold_percent"]);
+    try {
+        if (data.count("Detection.drop_threshold_percent")) {
+            m_detectionSettings.dropThresholdPercent = std::stod(data["Detection.drop_threshold_percent"]);
+        }
+        if (data.count("Detection.flash_duration_ms")) {
+            m_detectionSettings.flashDurationMs = std::stoi(data["Detection.flash_duration_ms"]);
+        }
+    } catch (const std::exception&) {
+        // Keep defaults on parse error
     }
     if (data.count("Detection.show_drop_markers")) {
         m_detectionSettings.showDropMarkers = (data["Detection.show_drop_markers"] == "true");
@@ -103,16 +118,17 @@ bool Config::load(const std::string& filename) {
     if (data.count("Detection.flash_on_drop")) {
         m_detectionSettings.flashOnDrop = (data["Detection.flash_on_drop"] == "true");
     }
-    if (data.count("Detection.flash_duration_ms")) {
-        m_detectionSettings.flashDurationMs = std::stoi(data["Detection.flash_duration_ms"]);
-    }
 
     // Parse Performance settings
-    if (data.count("Performance.update_rate_ms")) {
-        m_performanceSettings.updateRateMs = std::stoi(data["Performance.update_rate_ms"]);
-    }
-    if (data.count("Performance.stats_update_ms")) {
-        m_performanceSettings.statsUpdateMs = std::stoi(data["Performance.stats_update_ms"]);
+    try {
+        if (data.count("Performance.update_rate_ms")) {
+            m_performanceSettings.updateRateMs = std::stoi(data["Performance.update_rate_ms"]);
+        }
+        if (data.count("Performance.stats_update_ms")) {
+            m_performanceSettings.statsUpdateMs = std::stoi(data["Performance.stats_update_ms"]);
+        }
+    } catch (const std::exception&) {
+        // Keep defaults on parse error
     }
 
     // Parse Control settings

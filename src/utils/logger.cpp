@@ -38,8 +38,9 @@ bool Logger::initialize(const std::string& filename) {
 void Logger::shutdown() {
     std::lock_guard<std::mutex> lock(m_mutex);
 
-    if (m_initialized) {
-        log(Level::Info, "Logger shutting down");
+    if (m_initialized && m_file.is_open()) {
+        // Write shutdown message before closing
+        m_file << getTimestamp() << " [INFO ] Logger shutting down" << std::endl;
         m_file.close();
         m_initialized = false;
     }
