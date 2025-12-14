@@ -192,7 +192,7 @@ LRESULT WindowManager::handleMessage(HWND hwnd, UINT msg, WPARAM wParam, LPARAM 
     // Call custom callback if registered
     if (m_messageCallback) {
         LRESULT result = m_messageCallback(hwnd, msg, wParam, lParam);
-        if (result != 0) {
+        if (result == 0) {
             return result;
         }
     }
