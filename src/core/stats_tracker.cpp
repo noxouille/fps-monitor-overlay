@@ -1,6 +1,7 @@
 #include "stats_tracker.h"
 #include <algorithm>
 #include <numeric>
+#include <cmath>
 
 namespace fps_monitor {
 
