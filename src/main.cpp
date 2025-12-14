@@ -22,6 +22,7 @@
 // Utils modules
 #include "utils/timer.h"
 #include "utils/logger.h"
+#include "utils/tray_icon.h"
 
 using namespace fps_monitor;
 
@@ -136,6 +137,71 @@ public:
             LOG_WARNING("Failed to register F12 hotkey");
         }
 
+        // 14. Initialize system tray icon
+        m_trayIcon = std::make_unique<TrayIcon>();
+        if (!m_trayIcon->initialize(m_windowManager->getHandle(), L"FPS Monitor Overlay - Running")) {
+            LOG_WARNING("Failed to create tray icon");
+        } else {
+            // Set up tray icon callbacks
+            m_trayIcon->setToggleCallback([this]() {
+                m_visible = !m_visible;
+                m_windowManager->setVisible(m_visible);
+                m_trayIcon->setTooltip(m_visible ? L"FPS Monitor Overlay - Running" : L"FPS Monitor Overlay - Hidden");
+                m_trayIcon->setOverlayVisible(m_visible);
+            });
+
+            m_trayIcon->setSettingsCallback([this]() {
+                MessageBoxW(m_windowManager->getHandle(),
+                    L"Settings GUI coming in Phase 2!\n\nFor now, edit config.ini manually.",
+                    L"Settings",
+                    MB_OK | MB_ICONINFORMATION);
+            });
+
+            m_trayIcon->setAboutCallback([this]() {
+                MessageBoxW(m_windowManager->getHandle(),
+                    L"FPS Monitor Overlay v1.0\n\n"
+                    L"High-performance FPS monitoring with live graph visualization.\n\n"
+                    L"Features:\n"
+                    L"• Real-time FPS counter\n"
+                    L"• Live scrolling graph\n"
+                    L"• Drop detection\n"
+                    L"• Customizable themes\n\n"
+                    L"Licensed under MIT\n"
+                    L"https://github.com/noxouille/fps-monitor-overlay",
+                    L"About FPS Monitor Overlay",
+                    MB_OK | MB_ICONINFORMATION);
+            });
+
+            m_trayIcon->setExitCallback([this]() {
+                // Ask for confirmation
+                int result = MessageBoxW(m_windowManager->getHandle(),
+                    L"Are you sure you want to exit FPS Monitor Overlay?",
+                    L"Confirm Exit",
+                    MB_YESNO | MB_ICONQUESTION);
+                if (result == IDYES) {
+                    m_running = false;
+                    PostQuitMessage(0);
+                }
+            });
+
+            // Show notification on startup
+            m_trayIcon->showNotification(
+                L"FPS Monitor Overlay",
+                L"FPS Monitor is running in system tray. Press F12 to toggle visibility.",
+                3000
+            );
+
+            // Set up message callback for tray icon messages (after tray icon is initialized)
+            m_windowManager->setMessageCallback([this](HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) -> LRESULT {
+                // Handle tray icon messages
+                if (m_trayIcon && m_trayIcon->handleMessage(msg, wParam, lParam)) {
+                    return 0;
+                }
+                // Return non-zero to indicate message not handled
+                return 1;
+            });
+        }
+
         // Create brushes for rendering
         createBrushes();
 
@@ -191,6 +257,7 @@ public:
         LOG_INFO("Shutting down...");
 
         // Clean up in reverse order
+        m_trayIcon.reset();
         m_textRenderer.reset();
         m_graphRenderer.reset();
         m_d2dRenderer.reset();
@@ -322,6 +389,9 @@ private:
     // Detection components
     std::unique_ptr<GameDetector> m_gameDetector;
     std::unique_ptr<WindowTracker> m_windowTracker;
+
+    // Tray icon
+    std::unique_ptr<TrayIcon> m_trayIcon;
 
     // Brushes
     ID2D1SolidColorBrush* m_bgBrush = nullptr;

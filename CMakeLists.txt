@@ -58,11 +58,13 @@ set(DETECTION_HEADERS
 set(UTILS_SOURCES
     src/utils/timer.cpp
     src/utils/logger.cpp
+    src/utils/tray_icon.cpp
 )
 
 set(UTILS_HEADERS
     src/utils/timer.h
     src/utils/logger.h
+    src/utils/tray_icon.h
 )
 
 set(MAIN_SOURCE
@@ -112,6 +114,7 @@ if(WIN32)
         user32.lib
         gdi32.lib
         kernel32.lib
+        shell32.lib
     )
 endif()
 
