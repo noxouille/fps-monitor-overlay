@@ -39,7 +39,7 @@ void Config::initializeDefaults() {
     m_performanceSettings.statsUpdateMs = 500;
 
     // Control defaults
-    m_controlSettings.toggleHotkey = "VK_F12";
+    m_controlSettings.toggleHotkey = "VK_F11";
     m_controlSettings.dragModifier = "CTRL+SHIFT";
 
     // Game detection defaults

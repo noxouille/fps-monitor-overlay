@@ -131,9 +131,10 @@ public:
             return false;
         }
 
-        // 13. Register hotkey (F12 by default)
-        if (!m_windowManager->registerHotkey(VK_F12)) {
-            LOG_WARNING("Failed to register F12 hotkey");
+        // 13. Register hotkey (F11 by default)
+        if (!m_windowManager->registerHotkey(VK_F11)) {
+            LOG_WARNING("Failed to register F11 hotkey - it may be in use by another application");
+            LOG_WARNING("Try changing toggle_hotkey in config.ini to VK_F10, VK_F9, or another key");
         }
 
         // Create brushes for rendering

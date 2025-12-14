@@ -36,7 +36,7 @@
 2. Download the latest `fps-monitor-overlay-vX.X.X-windows-x64.zip`
 3. Extract to a folder
 4. Run `fps-monitor-overlay.exe`
-5. Press **F12** to toggle overlay visibility
+5. Press **F11** to toggle overlay visibility
 
 ### Building from Source
 
@@ -64,7 +64,7 @@ cmake --build . --config Release
 2. Customize settings as needed
 3. Run `fps-monitor-overlay.exe`
 4. Launch your game
-5. Press **F12** to toggle overlay visibility
+5. Press **F11** to toggle overlay visibility
 
 ## ⚙️ Configuration
 
@@ -90,7 +90,7 @@ show_drop_markers = true
 flash_on_drop = true
 
 [Controls]
-toggle_hotkey = VK_F12
+toggle_hotkey = VK_F11
 drag_modifier = CTRL+SHIFT    # Hold to drag overlay
 ```
 

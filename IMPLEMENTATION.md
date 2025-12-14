@@ -90,7 +90,7 @@ src/
   - Layered window with per-pixel alpha
   - Topmost, transparent, tool window style
   - Multi-monitor support
-  - Hotkey registration (F12 default)
+  - Hotkey registration (F11 default)
   - Position management (corners + custom)
 - **Key Methods**: `create()`, `show()`, `hide()`, `setPosition()`, `registerHotkey()`
 
@@ -289,7 +289,7 @@ Marked with TODO comments in code:
 2. Extract ZIP file
 3. Edit `config.ini` (optional)
 4. Run `fps-monitor-overlay.exe`
-5. Press F12 to toggle
+5. Press F11 to toggle
 
 ### For Developers
 1. Clone repository
