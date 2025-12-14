@@ -27,7 +27,16 @@
 ### Requirements
 - Windows 10 or Windows 11
 - DirectX 11 or later
-- Visual Studio 2019/2022 or CMake 3.15+
+
+### Download Pre-built Release
+
+**Easiest Option - No compilation required!**
+
+1. Go to [Releases](https://github.com/noxouille/fps-monitor-overlay/releases)
+2. Download the latest `fps-monitor-overlay-vX.X.X-windows-x64.zip`
+3. Extract to a folder
+4. Run `fps-monitor-overlay.exe`
+5. Press **F12** to toggle overlay visibility
 
 ### Building from Source
 
@@ -51,7 +60,7 @@ cmake --build . --config Release
 
 ### Running
 
-1. Copy `config.ini.example` to `config.ini`
+1. Copy `config.ini.example` to `config.ini` (or use the included one from releases)
 2. Customize settings as needed
 3. Run `fps-monitor-overlay.exe`
 4. Launch your game
@@ -137,6 +146,39 @@ This overlay uses a **non-intrusive window-based approach** (no injection or hoo
 - [ ] In-overlay settings GUI
 - [ ] Auto-update system
 
+## 🔧 Automated Builds
+
+This project uses **GitHub Actions** for automated compilation and releases. No need for Visual Studio!
+
+### Available Workflows
+
+1. **Automatic Builds** - Triggered on every push and pull request
+   - Builds both Debug and Release configurations
+   - Uploads artifacts for testing
+
+2. **Release Creation** - Triggered by version tags (e.g., `v1.0.0`)
+   - Compiles optimized Release build
+   - Packages with config, resources, and documentation
+   - Creates GitHub Release with downloadable ZIP
+
+3. **Manual Build** - Can be triggered manually from GitHub Actions tab
+   - Choose Debug, Release, or RelWithDebInfo
+   - Download artifacts for testing
+
+### Creating a Release
+
+To create a new release:
+
+```bash
+git tag v1.0.0
+git push origin v1.0.0
+```
+
+GitHub Actions will automatically:
+- Compile the Release build
+- Package everything needed to run
+- Create a release on GitHub with the ZIP file
+
 ## 🤝 Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
@@ -146,6 +188,8 @@ Contributions are welcome! Please feel free to submit a Pull Request.
 3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
+
+All pull requests automatically trigger builds to ensure code compiles correctly.
 
 ## 📝 License
 
