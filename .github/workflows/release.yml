@@ -1,0 +1,123 @@
+name: Create Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g., v1.0.0)'
+        required: true
+        default: 'v1.0.0'
+
+jobs:
+  create-release:
+    runs-on: windows-latest
+    permissions:
+      contents: write
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v2
+      
+    - name: Setup CMake
+      uses: lukka/get-cmake@latest
+      
+    - name: Get version
+      id: get_version
+      shell: bash
+      run: |
+        if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+          echo "VERSION=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
+        else
+          echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+        fi
+        
+    - name: Configure CMake
+      run: |
+        cmake -B build -S . -G "Visual Studio 17 2022" -A x64 -DCMAKE_BUILD_TYPE=Release
+        
+    - name: Build Release
+      run: |
+        cmake --build build --config Release
+        
+    - name: Package Release
+      run: |
+        $version = "${{ steps.get_version.outputs.VERSION }}"
+        $packageName = "fps-monitor-overlay-$version-windows-x64"
+        
+        # Check if executable exists
+        $exePath = "build/Release/fps-monitor-overlay.exe"
+        if (-not (Test-Path $exePath)) {
+          Write-Error "Executable not found at $exePath"
+          exit 1
+        }
+        
+        mkdir $packageName
+        Copy-Item $exePath $packageName/
+        Copy-Item config.ini.example "$packageName/config.ini"
+        Copy-Item -Recurse resources "$packageName/"
+        Copy-Item LICENSE "$packageName/"
+        Copy-Item README.md "$packageName/"
+        
+        # Create installation instructions
+        @"
+        FPS Monitor Overlay $version - Installation Instructions
+        
+        1. Extract this archive to a folder of your choice
+        2. Edit config.ini to customize settings (optional)
+        3. Run fps-monitor-overlay.exe
+        4. Press F12 to toggle the overlay visibility
+        
+        For more information, see README.md
+        "@ | Out-File -FilePath "$packageName/INSTALL.txt" -Encoding utf8
+        
+        # Create ZIP archive
+        Compress-Archive -Path "$packageName/*" -DestinationPath "$packageName.zip"
+        
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: ${{ steps.get_version.outputs.VERSION }}
+        name: Release ${{ steps.get_version.outputs.VERSION }}
+        draft: false
+        prerelease: false
+        generate_release_notes: true
+        files: |
+          fps-monitor-overlay-${{ steps.get_version.outputs.VERSION }}-windows-x64.zip
+        body: |
+          ## FPS Monitor Overlay ${{ steps.get_version.outputs.VERSION }}
+          
+          ### Features
+          - Real-time FPS monitoring with high precision
+          - Live scrolling graph visualization
+          - Performance statistics (AVG, MIN, MAX, 0.1%, 1%)
+          - FPS drop detection and alerts
+          - Customizable themes and settings
+          - Minimal performance overhead
+          
+          ### Installation
+          1. Download the ZIP file below
+          2. Extract to a folder
+          3. Run `fps-monitor-overlay.exe`
+          4. Press F12 to toggle visibility
+          
+          ### Requirements
+          - Windows 10/11
+          - DirectX 11 or later
+          
+          ### Configuration
+          Edit `config.ini` to customize:
+          - Overlay position and size
+          - Graph settings
+          - Drop detection threshold
+          - Hotkeys
+          - Theme selection
+          
+          See README.md for full documentation.
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

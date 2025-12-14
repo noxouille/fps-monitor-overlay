@@ -1,0 +1,59 @@
+name: Manual Build
+
+on:
+  workflow_dispatch:
+    inputs:
+      build_type:
+        description: 'Build Type'
+        required: true
+        default: 'Release'
+        type: choice
+        options:
+          - Release
+          - Debug
+          - RelWithDebInfo
+
+jobs:
+  manual-build:
+    runs-on: windows-latest
+    permissions:
+      contents: read
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v2
+      
+    - name: Setup CMake
+      uses: lukka/get-cmake@latest
+      
+    - name: Configure CMake
+      run: |
+        cmake -B build -S . -G "Visual Studio 17 2022" -A x64 -DCMAKE_BUILD_TYPE=${{ github.event.inputs.build_type }}
+        
+    - name: Build
+      run: |
+        cmake --build build --config ${{ github.event.inputs.build_type }}
+        
+    - name: Package Build
+      run: |
+        $buildType = "${{ github.event.inputs.build_type }}"
+        $packageName = "fps-monitor-overlay-$buildType-$(Get-Date -Format 'yyyyMMdd-HHmmss')"
+        
+        mkdir $packageName
+        Copy-Item "build/$buildType/fps-monitor-overlay.exe" "$packageName/"
+        Copy-Item config.ini.example "$packageName/config.ini"
+        Copy-Item -Recurse resources "$packageName/"
+        Copy-Item LICENSE "$packageName/" -ErrorAction SilentlyContinue
+        Copy-Item README.md "$packageName/" -ErrorAction SilentlyContinue
+        
+        Compress-Archive -Path "$packageName/*" -DestinationPath "$packageName.zip"
+        
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: fps-monitor-overlay-${{ github.event.inputs.build_type }}-build
+        path: fps-monitor-overlay-*.zip
+        retention-days: 14
