@@ -57,6 +57,13 @@ public:
     void toggleVisibility();
 
     /**
+     * @brief Set visibility state
+     * 
+     * @param visible True to show, false to hide
+     */
+    void setVisible(bool visible);
+
+    /**
      * @brief Check if window is visible
      * 
      * @return true if visible

@@ -80,6 +80,14 @@ void WindowManager::toggleVisibility() {
     }
 }
 
+void WindowManager::setVisible(bool visible) {
+    if (visible) {
+        show();
+    } else {
+        hide();
+    }
+}
+
 bool WindowManager::isVisible() const {
     return m_visible;
 }
