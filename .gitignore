@@ -1,0 +1,63 @@
+# Build directories
+build/
+out/
+bin/
+obj/
+
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.vcxproj.user
+*.sln.docstates
+
+# CMake
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+install_manifest.txt
+CMakeSettings.json
+*.cmake
+!CMakeLists.txt
+
+# Compiled files
+*.exe
+*.obj
+*.pdb
+*.ilk
+*.log
+*.tlog
+*.idb
+*.dll
+*.lib
+*.exp
+
+# User config (not the example)
+config.ini
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS files
+Thumbs.db
+.DS_Store
+ehthumbs.db
+Desktop.ini
+
+# Logs
+*.log
+logs/
+
+# Package files
+*.zip
+*.7z
+*.tar.gz
+
+# Temporary files
+*.tmp
+*.temp
+~$*
