@@ -91,16 +91,6 @@ public:
             return false;
         }
 
-        // Set up message callback for tray icon messages
-        m_windowManager->setMessageCallback([this](HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) -> LRESULT {
-            // Handle tray icon messages
-            if (m_trayIcon && m_trayIcon->handleMessage(msg, wParam, lParam)) {
-                return 0;
-            }
-            // Return non-zero to indicate message not handled
-            return 1;
-        });
-
         // 10. Initialize Direct2D renderer
         m_d2dRenderer = std::make_unique<D2DRenderer>();
         if (!m_d2dRenderer->initialize(m_windowManager->getHandle())) {
@@ -155,13 +145,8 @@ public:
             // Set up tray icon callbacks
             m_trayIcon->setToggleCallback([this]() {
                 m_visible = !m_visible;
-                if (m_visible) {
-                    m_windowManager->show();
-                    m_trayIcon->setTooltip(L"FPS Monitor Overlay - Running");
-                } else {
-                    m_windowManager->hide();
-                    m_trayIcon->setTooltip(L"FPS Monitor Overlay - Hidden");
-                }
+                m_windowManager->setVisible(m_visible);
+                m_trayIcon->setTooltip(m_visible ? L"FPS Monitor Overlay - Running" : L"FPS Monitor Overlay - Hidden");
                 m_trayIcon->setOverlayVisible(m_visible);
             });
 
@@ -205,6 +190,16 @@ public:
                 L"FPS Monitor is running in system tray. Press F12 to toggle visibility.",
                 3000
             );
+
+            // Set up message callback for tray icon messages (after tray icon is initialized)
+            m_windowManager->setMessageCallback([this](HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam) -> LRESULT {
+                // Handle tray icon messages
+                if (m_trayIcon && m_trayIcon->handleMessage(msg, wParam, lParam)) {
+                    return 0;
+                }
+                // Return non-zero to indicate message not handled
+                return 1;
+            });
         }
 
         // Create brushes for rendering

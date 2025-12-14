@@ -92,7 +92,7 @@ void TrayIcon::setIcon(HICON hIcon) {
         DestroyIcon(m_hIcon);
     }
     
-    // Assume caller owns the new icon, so we should destroy it
+    // Take ownership of the new icon for cleanup
     m_hIcon = hIcon;
     m_ownsIcon = true;
 }
