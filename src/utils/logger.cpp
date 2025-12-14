@@ -115,10 +115,14 @@ void Logger::checkRotation() {
         // Rotate log file
         m_file.close();
 
-        // Rename old log
+        // Rename old log with error handling
         std::string backupName = m_filename + ".old";
-        DeleteFileA(backupName.c_str());
-        MoveFileA(m_filename.c_str(), backupName.c_str());
+        DeleteFileA(backupName.c_str()); // Remove old backup if exists
+        
+        if (!MoveFileA(m_filename.c_str(), backupName.c_str())) {
+            // If move fails, try to delete and create new
+            DeleteFileA(m_filename.c_str());
+        }
 
         // Open new log
         m_file.open(m_filename, std::ios::out | std::ios::app);

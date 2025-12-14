@@ -14,10 +14,12 @@ namespace fps_monitor {
  * and fast random access for graph rendering.
  * 
  * @tparam T The type of data to store
- * @tparam N The fixed capacity of the buffer
+ * @tparam N The fixed capacity of the buffer (must be > 0)
  */
 template<typename T, size_t N>
 class RingBuffer {
+    static_assert(N > 0, "RingBuffer capacity must be greater than 0");
+    
 public:
     /**
      * @brief Construct a new Ring Buffer object

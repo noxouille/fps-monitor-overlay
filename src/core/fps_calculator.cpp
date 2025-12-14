@@ -18,6 +18,8 @@ FpsCalculator::FpsCalculator(size_t historySize)
 FpsCalculator::~FpsCalculator() = default;
 
 void FpsCalculator::update(double deltaTime) {
+    static constexpr double MAX_FPS = 1000.0;
+    
     // Avoid division by zero
     if (deltaTime <= 0.0) {
         return;
@@ -26,8 +28,8 @@ void FpsCalculator::update(double deltaTime) {
     // Calculate instantaneous FPS: 1.0 / deltaTime
     m_currentFPS = 1.0 / deltaTime;
 
-    // Clamp to reasonable values (0-1000 FPS)
-    m_currentFPS = std::max(0.0, std::min(m_currentFPS, 1000.0));
+    // Clamp to reasonable values (0-MAX_FPS)
+    m_currentFPS = std::max(0.0, std::min(m_currentFPS, MAX_FPS));
 
     // Store sample in ring buffer
     m_samples->push(m_currentFPS);

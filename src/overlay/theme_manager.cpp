@@ -14,6 +14,13 @@ ThemeManager::ThemeManager()
 ThemeManager::~ThemeManager() = default;
 
 bool ThemeManager::loadTheme(const std::string& themeName) {
+    // Validate theme name to prevent directory traversal
+    if (themeName.empty() || themeName.find("..") != std::string::npos ||
+        themeName.find("/") != std::string::npos || themeName.find("\\") != std::string::npos) {
+        loadDefaultTheme();
+        return false;
+    }
+    
     std::string filename = "resources/themes/" + themeName + ".json";
     std::ifstream file(filename);
 
@@ -70,7 +77,7 @@ std::string ThemeManager::getCurrentTheme() const {
 }
 
 ThemeManager::Color ThemeManager::parseHexColor(const std::string& hexColor) const {
-    if (hexColor.empty() || hexColor[0] != '#') {
+    if (hexColor.empty() || hexColor.length() < 2 || hexColor[0] != '#') {
         return {0.0f, 0.0f, 0.0f, 1.0f};
     }
 

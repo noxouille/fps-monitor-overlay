@@ -50,8 +50,15 @@ jobs:
         $version = "${{ steps.get_version.outputs.VERSION }}"
         $packageName = "fps-monitor-overlay-$version-windows-x64"
         
+        # Check if executable exists
+        $exePath = "build/Release/fps-monitor-overlay.exe"
+        if (-not (Test-Path $exePath)) {
+          Write-Error "Executable not found at $exePath"
+          exit 1
+        }
+        
         mkdir $packageName
-        Copy-Item build/Release/fps-monitor-overlay.exe $packageName/
+        Copy-Item $exePath $packageName/
         Copy-Item config.ini.example "$packageName/config.ini"
         Copy-Item -Recurse resources "$packageName/"
         Copy-Item LICENSE "$packageName/"

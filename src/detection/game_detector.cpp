@@ -86,17 +86,24 @@ std::string GameDetector::getProcessName(HWND hwnd) {
         return "";
     }
 
-    HANDLE process = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, processId);
+    // Use PROCESS_QUERY_LIMITED_INFORMATION for better security compatibility
+    HANDLE process = OpenProcess(PROCESS_QUERY_LIMITED_INFORMATION, FALSE, processId);
     if (!process) {
         return "";
     }
 
     char processName[MAX_PATH] = {0};
-    HMODULE module;
-    DWORD bytesNeeded;
-
-    if (EnumProcessModules(process, &module, sizeof(module), &bytesNeeded)) {
-        GetModuleBaseNameA(process, module, processName, sizeof(processName));
+    DWORD size = MAX_PATH;
+    
+    // QueryFullProcessImageNameA is safer and works with limited permissions
+    if (QueryFullProcessImageNameA(process, 0, processName, &size)) {
+        // Extract just the filename from full path
+        std::string fullPath(processName);
+        size_t lastSlash = fullPath.find_last_of("\\/");
+        if (lastSlash != std::string::npos) {
+            CloseHandle(process);
+            return fullPath.substr(lastSlash + 1);
+        }
     }
 
     CloseHandle(process);
