@@ -44,7 +44,8 @@ public:
 
     /**
      * @brief Update icon (for state indication)
-     * @param hIcon New icon handle
+     * @param hIcon New icon handle (TrayIcon takes ownership and will destroy on cleanup)
+     * @note Do not pass shared system icons (IDI_*). Create custom icons with CreateIcon.
      */
     void setIcon(HICON hIcon);
 
