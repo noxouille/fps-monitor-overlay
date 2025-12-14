@@ -1,0 +1,42 @@
+[Display]
+# Position: top_left, top_right, bottom_left, bottom_right
+position = top_right
+theme = matrix_green
+opacity = 0.7
+width = 280
+height = 160
+
+[Graph]
+# History in seconds (1.0 - 10.0)
+history_seconds = 2.0
+show_grid = false
+line_width = 2.0
+anti_aliasing = true
+# Color mode: solid, gradient
+color_mode = solid
+
+[Detection]
+# Drop threshold percentage (5.0 - 50.0)
+drop_threshold_percent = 15.0
+show_drop_markers = true
+flash_on_drop = true
+flash_duration_ms = 200
+
+[Performance]
+# Update rate in milliseconds (16 = 60fps, 33 = 30fps)
+update_rate_ms = 16
+stats_update_ms = 500
+
+[Controls]
+# Hotkey to toggle overlay (VK_ codes: VK_F12, VK_F11, etc.)
+toggle_hotkey = VK_F12
+# Hold these keys to drag overlay
+drag_modifier = CTRL+SHIFT
+
+[GameDetection]
+# Auto-detect fullscreen games
+auto_detect = true
+# Whitelist specific executables (comma-separated)
+whitelist = 
+# Blacklist executables
+blacklist = explorer.exe, taskmgr.exe
