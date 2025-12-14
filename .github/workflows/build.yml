@@ -1,0 +1,62 @@
+name: Build and Package
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v2
+      
+    - name: Setup CMake
+      uses: lukka/get-cmake@latest
+      
+    - name: Configure CMake (Debug)
+      run: |
+        cmake -B build-debug -S . -G "Visual Studio 17 2022" -A x64 -DCMAKE_BUILD_TYPE=Debug
+        
+    - name: Build (Debug)
+      run: |
+        cmake --build build-debug --config Debug
+        
+    - name: Configure CMake (Release)
+      run: |
+        cmake -B build-release -S . -G "Visual Studio 17 2022" -A x64 -DCMAKE_BUILD_TYPE=Release
+        
+    - name: Build (Release)
+      run: |
+        cmake --build build-release --config Release
+        
+    - name: Package Release Build
+      run: |
+        mkdir fps-monitor-overlay-release
+        Copy-Item build-release/Release/fps-monitor-overlay.exe fps-monitor-overlay-release/
+        Copy-Item config.ini.example fps-monitor-overlay-release/config.ini
+        Copy-Item -Recurse resources fps-monitor-overlay-release/
+        Copy-Item LICENSE fps-monitor-overlay-release/
+        Copy-Item README.md fps-monitor-overlay-release/
+        Compress-Archive -Path fps-monitor-overlay-release/* -DestinationPath fps-monitor-overlay-windows-x64.zip
+        
+    - name: Upload Release Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: fps-monitor-overlay-windows-x64
+        path: fps-monitor-overlay-windows-x64.zip
+        retention-days: 30
+        
+    - name: Upload Debug Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: fps-monitor-overlay-debug
+        path: build-debug/Debug/fps-monitor-overlay.exe
+        retention-days: 7
