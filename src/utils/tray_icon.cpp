@@ -8,6 +8,7 @@ TrayIcon::TrayIcon()
     , m_hIcon(nullptr)
     , m_isInitialized(false)
     , m_overlayVisible(true)
+    , m_ownsIcon(false)
 {
     std::memset(&m_notifyIconData, 0, sizeof(NOTIFYICONDATAW));
 }
@@ -30,9 +31,10 @@ bool TrayIcon::initialize(HWND hwnd, const std::wstring& tooltip) {
     m_notifyIconData.uFlags = NIF_ICON | NIF_MESSAGE | NIF_TIP;
     m_notifyIconData.uCallbackMessage = WM_TRAYICON;
 
-    // Load default application icon
+    // Load default application icon (shared resource, don't destroy)
     m_hIcon = LoadIcon(nullptr, IDI_APPLICATION);
     m_notifyIconData.hIcon = m_hIcon;
+    m_ownsIcon = false;
 
     // Set tooltip
     wcsncpy_s(m_notifyIconData.szTip, tooltip.c_str(), _TRUNCATE);
@@ -56,10 +58,12 @@ void TrayIcon::cleanup() {
         m_isInitialized = false;
     }
 
-    if (m_hIcon && m_hIcon != LoadIcon(nullptr, IDI_APPLICATION)) {
+    // Only destroy icon if we own it (custom icons)
+    if (m_hIcon && m_ownsIcon) {
         DestroyIcon(m_hIcon);
     }
     m_hIcon = nullptr;
+    m_ownsIcon = false;
 }
 
 void TrayIcon::setTooltip(const std::wstring& tooltip) {
@@ -83,11 +87,14 @@ void TrayIcon::setIcon(HICON hIcon) {
     Shell_NotifyIconW(NIM_MODIFY, &m_notifyIconData);
     m_notifyIconData.uFlags = NIF_ICON | NIF_MESSAGE | NIF_TIP;
 
-    // Update our icon reference
-    if (m_hIcon && m_hIcon != LoadIcon(nullptr, IDI_APPLICATION)) {
+    // Destroy old icon if we owned it
+    if (m_hIcon && m_ownsIcon) {
         DestroyIcon(m_hIcon);
     }
+    
+    // Assume caller owns the new icon, so we should destroy it
     m_hIcon = hIcon;
+    m_ownsIcon = true;
 }
 
 void TrayIcon::showNotification(const std::wstring& title, const std::wstring& message, DWORD timeout) {

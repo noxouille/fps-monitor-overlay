@@ -198,6 +198,13 @@ public:
                     PostQuitMessage(0);
                 }
             });
+
+            // Show notification on startup
+            m_trayIcon->showNotification(
+                L"FPS Monitor Overlay",
+                L"FPS Monitor is running in system tray. Press F12 to toggle visibility.",
+                3000
+            );
         }
 
         // Create brushes for rendering

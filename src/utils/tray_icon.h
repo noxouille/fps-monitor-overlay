@@ -107,6 +107,7 @@ private:
     HICON m_hIcon;
     bool m_isInitialized;
     bool m_overlayVisible;
+    bool m_ownsIcon;
 
     // Menu item IDs
     static constexpr UINT WM_TRAYICON = WM_USER + 1;
