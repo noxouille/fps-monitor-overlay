@@ -1,0 +1,22 @@
+{
+    "name": "Matrix Green",
+    "version": "1.0",
+    "colors": {
+        "background": "#000000B3",
+        "graph_line": "#00FF00",
+        "graph_fill": "#00FF0033",
+        "text_primary": "#00FF00",
+        "text_secondary": "#00DD00",
+        "text_shadow": "#000000",
+        "drop_marker": "#FFFF00",
+        "grid_line": "#00FF0033",
+        "border": "#00FF00"
+    },
+    "style": {
+        "border_width": 0,
+        "corner_radius": 4,
+        "font_family": "Consolas",
+        "font_size": 14,
+        "graph_glow": true
+    }
+}

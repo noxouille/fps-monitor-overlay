@@ -1,0 +1,22 @@
+{
+    "name": "Cyberpunk",
+    "version": "1.0",
+    "colors": {
+        "background": "#0A0A1ECC",
+        "graph_line": "#FFD700",
+        "graph_fill": "#FFD70033",
+        "text_primary": "#FFD700",
+        "text_secondary": "#FFA500",
+        "text_shadow": "#000000",
+        "drop_marker": "#FF00FF",
+        "grid_line": "#FFD70022",
+        "border": "#FFD700"
+    },
+    "style": {
+        "border_width": 2,
+        "corner_radius": 0,
+        "font_family": "Consolas",
+        "font_size": 14,
+        "graph_glow": true
+    }
+}

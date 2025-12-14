@@ -1,0 +1,22 @@
+{
+    "name": "Stealth Dark",
+    "version": "1.0",
+    "colors": {
+        "background": "#000000B3",
+        "graph_line": "#00FFFF",
+        "graph_fill": "#00FFFF22",
+        "text_primary": "#FFFFFF",
+        "text_secondary": "#CCCCCC",
+        "text_shadow": "#000000",
+        "drop_marker": "#FF0000",
+        "grid_line": "#FFFFFF22",
+        "border": "#00FFFF"
+    },
+    "style": {
+        "border_width": 0,
+        "corner_radius": 4,
+        "font_family": "Segoe UI",
+        "font_size": 14,
+        "graph_glow": false
+    }
+}

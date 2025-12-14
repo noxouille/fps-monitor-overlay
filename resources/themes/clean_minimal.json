@@ -1,0 +1,22 @@
+{
+    "name": "Clean Minimal",
+    "version": "1.0",
+    "colors": {
+        "background": "#FFFFFF4D",
+        "graph_line": "#0066CC",
+        "graph_fill": "#0066CC22",
+        "text_primary": "#000000",
+        "text_secondary": "#333333",
+        "text_shadow": "#FFFFFF",
+        "drop_marker": "#FF6600",
+        "grid_line": "#0066CC22",
+        "border": "#0066CC"
+    },
+    "style": {
+        "border_width": 1,
+        "corner_radius": 8,
+        "font_family": "Segoe UI",
+        "font_size": 13,
+        "graph_glow": false
+    }
+}
