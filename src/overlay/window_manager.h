@@ -99,7 +99,7 @@ public:
     /**
      * @brief Register a hotkey for toggling visibility
      * 
-     * @param vkCode Virtual key code (e.g., VK_F12)
+     * @param vkCode Virtual key code (e.g., VK_F11)
      * @param modifiers Modifier keys (e.g., MOD_CONTROL)
      * @return true if registered successfully
      * @return false otherwise

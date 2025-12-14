@@ -1,4 +1,5 @@
 #include "window_manager.h"
+#include "../utils/logger.h"
 
 namespace fps_monitor {
 
@@ -117,9 +118,18 @@ bool WindowManager::registerHotkey(UINT vkCode, UINT modifiers) {
 
     if (RegisterHotKey(m_hwnd, m_hotkeyId, modifiers, vkCode)) {
         m_hotkeyRegistered = true;
+        LOG_INFO("Hotkey registered successfully");
         return true;
     }
 
+    // Log detailed error information
+    DWORD error = GetLastError();
+    if (error == ERROR_HOTKEY_ALREADY_REGISTERED) {
+        LOG_ERROR("Failed to register hotkey: Already in use by another application");
+    } else {
+        LOG_ERROR("Failed to register hotkey: Error code " + std::to_string(error));
+    }
+    
     return false;
 }
 

@@ -28,8 +28,8 @@ update_rate_ms = 16
 stats_update_ms = 500
 
 [Controls]
-# Hotkey to toggle overlay (VK_ codes: VK_F12, VK_F11, etc.)
-toggle_hotkey = VK_F12
+# Hotkey to toggle overlay (VK_ codes: VK_F11, VK_F10, VK_F9, etc.)
+toggle_hotkey = VK_F11
 # Hold these keys to drag overlay
 drag_modifier = CTRL+SHIFT
 
